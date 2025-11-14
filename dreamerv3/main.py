@@ -84,6 +84,15 @@ def main(argv=None):
         bind(make_stream, config),
         bind(make_logger, config),
         args)
+    
+  elif config.script == 'recon_eval':
+    embodied.run.recon_eval(
+        bind(make_agent, config),
+        bind(make_replay, config, 'eval_replay', 'eval'),
+        bind(make_env, config),
+        bind(make_stream, config),
+        bind(make_logger, config),
+        args)
 
   elif config.script == 'eval_only':
     embodied.run.eval_only(
@@ -192,7 +201,7 @@ def make_replay(config, folder, mode='train'):
     directory /= f'{config.replica:05}'
   kwargs = dict(
       length=length, capacity=int(capacity), online=config.replay.online,
-      chunksize=config.replay.chunksize, directory=directory)
+      chunksize=config.replay.chunksize, directory=directory, save_wait=False)
 
   if config.replay.fracs.uniform < 1 and mode == 'train':
     assert config.jax.compute_dtype in ('bfloat16', 'float32'), (
@@ -216,6 +225,8 @@ def make_env(config, index, **overrides):
     import memory_maze  # noqa
   ctor = {
       'dummy': 'embodied.envs.dummy:Dummy',
+      'video': 'embodied.envs.video:VideoDataset',
+      'physics': 'embodied.envs.physics_informed:PhysicsDataset',
       'gym': 'embodied.envs.from_gym:FromGym',
       'dm': 'embodied.envs.from_dmenv:FromDM',
       'crafter': 'embodied.envs.crafter:Crafter',
@@ -236,12 +247,14 @@ def make_env(config, index, **overrides):
     module, cls = ctor.split(':')
     module = importlib.import_module(module)
     ctor = getattr(module, cls)
+    print('ctor', ctor)
   kwargs = config.env.get(suite, {})
   kwargs.update(overrides)
   if kwargs.pop('use_seed', False):
     kwargs['seed'] = hash((config.seed, index)) % (2 ** 32 - 1)
   if kwargs.pop('use_logdir', False):
     kwargs['logdir'] = elements.Path(config.logdir) / f'env{index}'
+  print('env kwargs:', kwargs)
   env = ctor(task, **kwargs)
   return wrap_env(env, config)
 

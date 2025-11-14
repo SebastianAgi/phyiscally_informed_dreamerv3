@@ -226,6 +226,7 @@ class Encoder(nj.Module):
     if self.imgkeys:
       K = self.kernel
       imgs = [obs[k] for k in sorted(self.imgkeys)]
+      print(x.dtype for x in imgs)
       assert all(x.dtype == jnp.uint8 for x in imgs)
       x = nn.cast(jnp.concatenate(imgs, -1), force=True) / 255 - 0.5
       x = x.reshape((-1, *x.shape[bdims:]))
@@ -274,6 +275,9 @@ class Decoder(nj.Module):
     self.imgdep = sum(obs_space[k].shape[-1] for k in self.imgkeys)
     self.imgres = self.imgkeys and obs_space[self.imgkeys[0]].shape[:-1]
     self.kw = kw
+    print('##############################################')
+    print('DEC img keys: ', self.imgkeys)
+    print('##############################################')
 
   @property
   def entry_space(self):

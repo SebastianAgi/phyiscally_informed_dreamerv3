@@ -99,9 +99,7 @@ defaults:
     dec:
       typ: simple
       simple: {depth: 64, mults: [2, 3, 4, 4], layers: 3, units: 1024, act: silu, norm: rms, outscale: 1.0, winit: trunc_normal_in, outer: False, kernel: 5, bspace: 8, strided: False}
-    dec2:
-      typ: simple
-      simple: {depth: 64, mults: [2, 3, 4, 4], layers: 3, units: 1024, act: silu, norm: rms, outscale: 1.0, winit: trunc_normal_in, outer: False, kernel: 5, bspace: 8, strided: False}
+      
     rewhead: {layers: 1, units: 1024, act: silu, norm: rms, output: symexp_twohot, outscale: 0.0, winit: trunc_normal_in, bins: 255}
     conhead: {layers: 1, units: 1024, act: silu, norm: rms, output: binary, outscale: 1.0, winit: trunc_normal_in}
     policy: {layers: 3, units: 1024, act: silu, norm: rms, minstd: 0.1, maxstd: 1.0, outscale: 0.01, unimix: 0.01, winit: trunc_normal_in}
@@ -126,7 +124,7 @@ defaults:
     # # Allow training on action-free datasets by zeroing actions consumed by RSSM.
     # zero_action: False
     # Optional: emit recon panels as images for W&B.
-    report_wandb_images: true
+    report_wandb_images: False
 
 size1m: &size1m
   .*\.rssm: {deter: 512, hidden: 64, classes: 4}
@@ -241,14 +239,14 @@ image_wm:
   agent.report: True
   # agent.zero_action: True
 
-physics:
-  task: physics_informed
-  run: {envs: 1, eval_envs: 0, report_every: 100, log_every: 50, save_every: 600, train_ratio: 64}
-  env.physics: {path: '/home/Sebastian/dataset/isaacsim/object_drop/_run631', pattern: "*.png"}
-  agent.loss_scales: {rec: 1.0, rew: 0.0, con: 0.0, dyn: 1.0, rep: 0.1, policy: 0.0, value: 0.0, repval: 0.0}
-  agent.imag_length: 15
-  agent.imag_last: 0
-  agent.report: True
-  agent.dec2:
-      typ: simple
-      simple: {depth: 64, mults: [2, 3, 4, 4], layers: 3, units: 1024, act: silu, norm: rms, outscale: 1.0, winit: trunc_normal_in, outer: False, kernel: 5, bspace: 8, strided: False}
+# physics:
+#   task: physics_informed
+#   run: {envs: 1, eval_envs: 0, report_every: 100, log_every: 50, save_every: 600, train_ratio: 64}
+#   env.physics: {path: '/home/Sebastian/dataset/isaacsim/object_drop/_run631', pattern: "*.png"}
+#   agent.loss_scales: {rec: 1.0, rew: 0.0, con: 0.0, dyn: 1.0, rep: 0.1, policy: 0.0, value: 0.0, repval: 0.0}
+#   agent.imag_length: 15
+#   agent.imag_last: 0
+#   agent.report: True
+#   agent.dec2:
+#       typ: simple
+#       simple: {depth: 64, mults: [2, 3, 4, 4], layers: 3, units: 1024, act: silu, norm: rms, outscale: 1.0, winit: trunc_normal_in, outer: False, kernel: 5, bspace: 8, strided: False}

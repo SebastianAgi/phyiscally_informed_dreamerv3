@@ -22,7 +22,7 @@ class Optimizer(nj.Module):
     self.modules = modules
     self.opt = opt
     self.step = nj.Variable(jnp.array, 0, i32, name='step')
-    self.scaling = (nets.COMPUTE_DTYPE == jnp.float16)
+    self.scaling = (nets.COMPUTE_DTYPE == jnp.bfloat16)
     if self.scaling:
       self.opt = optax.apply_if_finite(self.opt, max_consecutive_errors=1000)
       self.grad_scale = nj.Variable(jnp.array, 1e4, f32, name='grad_scale')

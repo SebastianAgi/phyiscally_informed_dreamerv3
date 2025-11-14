@@ -39,6 +39,10 @@ RUN pip install jax[cuda]==0.5.0
 COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
+RUN pip install -U nvidia-cuda-runtime-cu12==12.9.79 nvidia-cuda-nvcc-cu12==12.9.86 nvidia-cuda-nvrtc-cu12==12.9.86 nvidia-cublas-cu12==12.9.1.4 nvidia-cufft-cu12==11.4.1.4 nvidia-cusolver-cu12==11.7.5.82 nvidia-cusparse-cu12==12.5.10.65 nvidia-nvjitlink-cu12==12.9.86 nvidia-nvml-dev-cu12==12.9.79
+
+RUN pip install -U wandb wandb[media] tensorflow tensorboard tensorboard-plugin-profile
+
 # Source
 RUN mkdir /app
 WORKDIR /app
