@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Mastering Diverse Domains through World Models
 
 A reimplementation of [DreamerV3][paper], a scalable and general reinforcement
@@ -121,3 +122,6 @@ environments.
 [paper]: https://arxiv.org/pdf/2301.04104
 [website]: https://danijar.com/dreamerv3
 [tweet]: https://twitter.com/danijarh/status/1613161946223677441
+=======
+# phyiscally_informed_dreamerv3
+>>>>>>> 90ac83d68ed1ff0a0a1be7032877ff3a1e658848

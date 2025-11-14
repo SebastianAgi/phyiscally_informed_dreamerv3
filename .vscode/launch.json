@@ -1,0 +1,62 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Dreamer: main.py (conda: dreamer)",
+            "type": "debugpy",
+            "request": "launch",
+            "python": "/home/Sebastian/miniforge3/envs/dreamer/bin/python",
+            "program": "${workspaceFolder}/dreamerv3/main.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--logdir", "${env:HOME}/logdir/dreamer/{timestamp}",
+                "--configs", "crafter",
+                "--run.train_ratio", "32",
+                "--batch_size", "1"
+            ],
+            "env": {
+                "PYTHONUNBUFFERED": "1"
+            }
+        },
+        {
+            "name": "Dreamer container",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug-dreamer",
+            "python": {
+                "args": [
+                    "--logdir", "/logdir/dreamerv3-objectdrop-image-only-{timestamp}",
+                    "--configs", "defaults, image_wm",
+                    "--task", "video_dataset",
+                    "--env.video.path", "/object_drop/",
+                    "--env.video.pattern", "*.png",
+                    "--env.video.subdir_prefix", "_run",
+                    "--env.video.max_subdirs", "1",
+                    "--env.video.file_prefix", "rgb",
+                    "--env.video.exts", ".png",
+                    "--batch_size", "16",
+                    "--batch_length", "64",
+                    "--run.envs", "1",
+                    "--run.steps", "300000",
+                    "--run.train_ratio", "256",
+                    "--run.report_every", "50",
+                    "--run.log_every", "50",
+                    "--run.save_every", "500",
+                    "--logger.outputs", "jsonl,scope,wandb"
+                ]
+            }
+        }
+    ]
+}
